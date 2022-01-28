@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.example.demo</groupId>
+        <artifactId>demo-project</artifactId>
+        <version>0.0.1</version>
+    </parent>
+
+    <groupId>com.example.demo.transformer</groupId>
+    <artifactId>eclipse-transformer-demo</artifactId>
+
+    <description>Example of Eclipse Transformer usage</description>
+
+    <properties>
+        <jetty.javax.version>9.4.27.v20200227</jetty.javax.version>
+        <jersey.javax.version>2.31</jersey.javax.version>
+        <jetty.jakata.version>11.0.7</jetty.jakata.version>
+        <jersey.jakarta.version>3.0.3</jersey.jakarta.version>
+        <metro.jax.ws.version>2.1.6</metro.jax.ws.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>${metro.jax.ws.version}</version>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>run-javax</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.glassfish.jersey.containers</groupId>
+                    <artifactId>jersey-container-servlet</artifactId>
+                    <version>${jersey.javax.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.jersey.inject</groupId>
+                    <artifactId>jersey-hk2</artifactId>
+                    <version>${jersey.javax.version}</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-maven-plugin</artifactId>
+                        <version>${jetty.javax.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>run-jakarta</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.glassfish.jersey.containers</groupId>
+                    <artifactId>jersey-container-servlet</artifactId>
+                    <version>${jersey.jakarta.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.jersey.inject</groupId>
+                    <artifactId>jersey-hk2</artifactId>
+                    <version>${jersey.jakarta.version}</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-maven-plugin</artifactId>
+                        <version>${jetty.jakata.version}</version>
+                        <configuration>
+                            <webApp>
+                                <war>${project.build.directory}/demo-transformed-1.0-SNAPSHOT.war</war>
+                            </webApp>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.eclipse.transformer</groupId>
+                        <artifactId>org.eclipse.transformer.maven</artifactId>
+                        <version>0.2.0</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+
+</project>
